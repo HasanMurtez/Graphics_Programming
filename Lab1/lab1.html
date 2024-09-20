@@ -9,7 +9,7 @@
     <style type="text/css">
 	canvas {
 
-    border: 1px solid black;
+    border: 5px solid black;
   }
     </style>
 
@@ -17,18 +17,23 @@
 
   <body>
 
-    <canvas id="canvasOne"></canvas>
+    <canvas id="canvasOne" width="1000" height="800"></canvas>
 
     <script type="text/javascript">
 		// Gets a handle to the element with id canvasOne.
 
 		const canvas = document.getElementById("canvasOne");
 		// Set the canvas up for drawing in 2D.
-		const ctx = canvas.getContext("2d");
+		
+    const ctx = canvas.getContext("2d");
     ctx.font = "30px Arial";
+    
+    //add name
     ctx.fillText("Hasan Murtaza",10,80);
 		// Set the fill colour to bright red.
-		
+
+		ctx.fillStyle = "Red"
+    ctx.font = "20px Arial";
 		// Create a filled rectangle 
 		ctx.fillRect(90, 90, 100, 100);
 	  
