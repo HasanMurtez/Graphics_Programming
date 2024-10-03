@@ -15,36 +15,51 @@
     <canvas id="canvas-for-ball" width="800" height="600"></canvas>
 
     <script type="text/javascript">
-        // Get a handle to the element with id canvasOne.
+        // Get a handle to the element with id canvas-for-ball.
         var canvas = document.getElementById("canvas-for-ball");
         // Get a 2D context for the canvas.
         var ctx = canvas.getContext("2d");
 
-        // The vertical location of the ball.
-        var y = 300; // Start in the middle
-        var yspeed = 4; // Speed of the ball
+        // The starting position and speeds of the ball.
+        var x = 50; // Start position (horizontal)
+        var y = 300; // Start position (vertical)
+        var xspeed = 3; // Speed of the ball (horizontal)
+        var yspeed = 4; // Speed of the ball (vertical)
 
         // A function to repeat every time the animation loops.
         function repeatme() {
             // Clear canvas
             ctx.clearRect(0, 0, 800, 600);
             ctx.beginPath();
-            ctx.arc(50, y, 10, 0, 2 * Math.PI); // Increase radius for better visibility
+            ctx.arc(x, y, 10, 0, 2 * Math.PI); // Ball at (x, y) with radius 10
             ctx.stroke();
 
-            // Update the y location.
-            y += yspeed;
+            // Update the location of the ball.
+            x += xspeed; // Update horizontal position
+            y += yspeed; // Update vertical position
 
             // If the ball hits the bottom of the canvas
             if (y + 10 >= 600) { // 10 is the radius
                 y = 600 - 10; // Stop at the bottom
-                yspeed = -yspeed; // Reverse direction
+                yspeed = -yspeed; // Reverse vertical direction
             }
 
             // If the ball hits the top of the canvas
             if (y - 10 <= 0) { // 10 is the radius
                 y = 10; // Stop at the top
-                yspeed = -yspeed; // Reverse direction
+                yspeed = -yspeed; // Reverse vertical direction
+            }
+
+            // If the ball hits the right side of the canvas
+            if (x + 10 >= 800) { // 10 is the radius
+                x = 800 - 10; // Stop at the right
+                xspeed = -xspeed; // Reverse horizontal direction
+            }
+
+            // If the ball hits the left side of the canvas
+            if (x - 10 <= 0) { // 10 is the radius
+                x = 10; // Stop at the left
+                xspeed = -xspeed; // Reverse horizontal direction
             }
 
             window.requestAnimationFrame(repeatme);
