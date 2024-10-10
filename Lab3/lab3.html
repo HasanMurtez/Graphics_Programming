@@ -1,56 +1,115 @@
 <!DOCTYPE html>
-
 <html>
-
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Canvas</title>
-
     <style type="text/css">
-      canvas {
-        border: 1px solid grey; 
-      }
+        canvas {
+            background-color: white;
+            border: 5px solid black;
+        }
     </style>
-
-  </head>
-
-  <body>
-	<p>This is a paragraph.</p>
-
-    <canvas id="canvas-for-ball"></canvas>
+</head>
+<body>
+    <h1>Hasan Murtaza</h1>
+    <canvas id="canvas-for-ball" width="800" height="600"></canvas>
 
     <script type="text/javascript">
-      var noClicks = 0;
-      
-      // Gets a handle to the element with id canvasOne.
-      var canvas = document.getElementById("canvas-for-ball");
-      // Get a 2D context for the canvas.
-      var ctx = canvas.getContext("2d");
-      // Make the fill style red.
-      ctx.fillStyle = "rgb(255, 0, 0)";
-      
-     var canvasPosition = {
-        x: canvas.offsetLeft,
-        y:canvas.offsetTop
-     }
+        class Ball {
+            constructor(x, y, radius, xspeed, yspeed) {
+                this.x = x; // Horizontal position
+                this.y = y; // Vertical position
+                this.radius = radius; // Radius of the ball
+                this.xspeed = xspeed; // Horizontal speed
+                this.yspeed = yspeed; // Vertical speed
+            }
 
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI); // Draw the ball
+                ctx.stroke();
+            }
 
-        canvas.addEventListener("click", function(event) { 
+            update(canvasWidth, canvasHeight) {
+                // Update the location of the ball
+                this.x += this.xspeed;
+                this.y += this.yspeed;
 
-    var mouse = {
-           x: event.clientX - canvasPosition.x,
-          y: event.clientY - canvasPosition.y
-     }
+                // Check for collisions with the canvas boundaries
+                if (this.y + this.radius >= canvasHeight) {
+                    this.y = canvasHeight - this.radius; // Stop at the bottom
+                    this.yspeed = -this.yspeed; // Reverse vertical direction
+                }
 
-     ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 6, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        noClicks += 1;
-        console.log("test");
-      });
+                if (this.y - this.radius <= 0) {
+                    this.y = this.radius; // Stop at the top
+                    this.yspeed = -this.yspeed; // Reverse vertical direction
+                }
+
+                if (this.x + this.radius >= canvasWidth) {
+                    this.x = canvasWidth - this.radius; // Stop at the right
+                    this.xspeed = -this.xspeed; // Reverse horizontal direction
+                }
+
+                if (this.x - this.radius <= 0) {
+                    this.x = this.radius; // Stop at the left
+                    this.xspeed = -this.xspeed; // Reverse horizontal direction
+                }
+            }
+        }
+
+        class Paddle {
+            constructor(x, y, width, height) {
+                this.x = x; // Horizontal position
+                this.y = y; // Vertical position
+                this.width = width; // Width of the paddle
+                this.height = height; // Height of the paddle
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = "blue"; // Paddle color
+                ctx.fillRect(this.x, this.y, this.width, this.height); // Draw the paddle
+            }
+
+            move(direction) {
+                const speed = 5; // Speed of the paddle movement
+                if (direction === 'left' && this.x > 0) {
+                    this.x -= speed; // Move left
+                } else if (direction === 'right' && this.x + this.width < 800) {
+                    this.x += speed; // Move right
+                }
+            }
+        }
+
+        // Get a handle to the element with id canvas-for-ball
+        var canvas = document.getElementById("canvas-for-ball");
+        var ctx = canvas.getContext("2d");
+
+        // Create instances of Ball and Paddle
+        var ball = new Ball(50, 300, 10, 3, 4);
+        var paddle = new Paddle(350, 550, 100, 10); // Initial position of the paddle
+
+        // A function to repeat every time the animation loops
+        function repeatme() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ball.draw(ctx); // Draw the ball
+            ball.update(canvas.width, canvas.height); // Update the ball's position
+            paddle.draw(ctx); // Draw the paddle
+            window.requestAnimationFrame(repeatme);
+        }
+
+        // Add event listeners for paddle movement
+        window.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                paddle.move('left'); // Move paddle left
+            } else if (event.key === "ArrowRight") {
+                paddle.move('right'); // Move paddle right
+            }
+        });
+
+        // Start the animation
+        repeatme();
     </script>
-
-  </body>
-
+</body>
 </html>
