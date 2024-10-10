@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Keyboard Events</title>
+    <style type="text/css">
+        canvas {
+            border: 1px solid grey; 
+            width: 800px; 
+            height: 600px; 
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+</head>
+<body>
+    <canvas id="canvas-for-ball"></canvas>
+    <script type="text/javascript">
+        // Get a handle to the element with id canvas-for-ball
+        var canvas = document.getElementById("canvas-for-ball");
+        // Get a 2D context for the canvas
+        var ctx = canvas.getContext("2d");
+
+        // Set the canvas dimensions
+        canvas.width = 800;
+        canvas.height = 600;
+
+        // Make the fill style red
+        ctx.fillStyle = "rgb(255, 0, 0)";
+
+        // Add a JavaScript event listener to the keypress event
+        window.addEventListener("keypress", function(event) { 
+            // Just log the event to the console
+            console.log(event);
+        });
+
+        // Handle key presses with jQuery
+        $(document.body).on('keydown', function(e) {
+            console.log("Key pressed:", e.which);
+            switch (e.which) {
+                // Key code for left arrow
+                case 37:
+                    console.log('Left arrow key pressed!');
+                    break;
+                // Key code for right arrow
+                case 39:
+                    console.log('Right arrow key pressed!');
+                    break;
+                // Additional cases can be added for other keys
+                default:
+                    console.log('Other key pressed:', e.which);
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
