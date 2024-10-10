@@ -71,13 +71,16 @@
                 ctx.fillRect(this.x, this.y, this.width, this.height); // Draw the paddle
             }
 
-            move(direction) {
-                const speed = 5; // Speed of the paddle movement
-                if (direction === 'left' && this.x > 0) {
-                    this.x -= speed; // Move left
-                } else if (direction === 'right' && this.x + this.width < 800) {
-                    this.x += speed; // Move right
-                }
+            moveUp() {
+                this.y = Math.max(0, this.y - 5); // Move up, but not above the canvas
+            }
+
+            moveDown() {
+                this.y = Math.min(600 - this.height, this.y + 5); // Move down, but not below the canvas
+            }
+
+            followMouse(mouseY) {
+                this.y = Math.max(0, Math.min(mouseY - this.height / 2, 600 - this.height)); // Center paddle on mouse
             }
         }
 
@@ -101,11 +104,18 @@
 
         // Add event listeners for paddle movement
         window.addEventListener("keydown", function(event) {
-            if (event.key === "ArrowLeft") {
-                paddle.move('left'); // Move paddle left
-            } else if (event.key === "ArrowRight") {
-                paddle.move('right'); // Move paddle right
+            if (event.key === "ArrowUp") {
+                paddle.moveUp(); // Move paddle up
+            } else if (event.key === "ArrowDown") {
+                paddle.moveDown(); // Move paddle down
             }
+        });
+
+        // Add mouse movement listener to move paddle
+        canvas.addEventListener("mousemove", function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseY = event.clientY - rect.top; // Get mouse Y relative to canvas
+            paddle.followMouse(mouseY); // Move paddle to mouse Y
         });
 
         // Start the animation
