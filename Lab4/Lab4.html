@@ -60,16 +60,18 @@
         }
 
         class Paddle {
-            constructor(x, y, width, height) {
+            constructor(x, y, radius) {
                 this.x = x; // Horizontal position
                 this.y = y; // Vertical position
-                this.width = width; // Width of the paddle
-                this.height = height; // Height of the paddle
+                this.radius = radius; // Radius of the paddle
             }
 
             draw(ctx) {
                 ctx.fillStyle = "blue"; // Paddle color
-                ctx.fillRect(this.x, this.y, this.width, this.height); // Draw the paddle
+                ctx.beginPath();
+                ctx.arc(this.x, this.y + this.radius, this.radius, 0, 2 * Math.PI); // Draw the paddle as a circle
+                ctx.fill(); // Fill the circle
+                ctx.stroke(); // Optionally, add an outline
             }
 
             moveUp() {
@@ -77,11 +79,11 @@
             }
 
             moveDown() {
-                this.y = Math.min(300 - this.height, this.y + 5); // Move down, but not below the canvas
+                this.y = Math.min(300 - this.radius * 2, this.y + 5); // Move down, but not below the canvas
             }
 
             followMouse(mouseY) {
-                this.y = Math.max(0, Math.min(mouseY - this.height / 2, 300 - this.height)); // Center paddle on mouse
+                this.y = Math.max(0, Math.min(mouseY - this.radius, 300 - this.radius * 2)); // Center paddle on mouse
             }
         }
 
@@ -91,8 +93,8 @@
 
         // Create instances of Ball and Paddles
         var ball = new Ball(200, 150, 10, 3, 4); // Adjusted ball starting position
-        var leftPaddle = new Paddle(30, 100, 10, 100); // Left paddle
-        var rightPaddle = new Paddle(360, 100, 10, 100); // Right paddle
+        var leftPaddle = new Paddle(30, 100, 10); // Left paddle as a circle
+        var rightPaddle = new Paddle(360, 100, 10); // Right paddle as a circle
 
         // A function to repeat every time the animation loops
         function repeatme() {
