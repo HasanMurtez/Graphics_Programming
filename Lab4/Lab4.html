@@ -12,9 +12,10 @@
 </head>
 <body>
     <h1>Hasan Murtaza</h1>
-    <canvas id="canvas-for-ball" width="400" height="300"></canvas>
+    <canvas id="canvas-for-ball" width="445" height="200"></canvas>
 
     <script type="text/javascript">
+
         class Ball {
             constructor(x, y, radius, xspeed, yspeed) {
                 this.x = x; // Horizontal position
@@ -71,6 +72,7 @@
                 this.x = x; // Horizontal position
                 this.y = y; // Vertical position
                 this.radius = radius; // Radius of the paddle
+                this.score = 0; //initialize paddle score
             }
 
             draw(ctx) {
@@ -114,6 +116,12 @@
                 message = ''; // Clear the message after 0.75 seconds
             }, 750);
         }
+        function drawScores() {
+            ctx.fillStyle = "black";
+            ctx.font = "20px Arial";
+            ctx.fillText("Left Paddle Score: " + leftPaddle.score, 10, 20); // Draw left paddle score (added)
+            ctx.fillText("Right Paddle Score: " + rightPaddle.score, 250, 20); // Draw right paddle score (added)
+        }
 
         // A function to repeat every time the animation loops
         function repeatme() {
@@ -126,21 +134,35 @@
 
             
        
-       if (ball.collidesWith(leftPaddle)) {
-       ball.xspeed = -ball.xspeed; // Reverse horizontal direction on collision with left paddle
-       ball.x = leftPaddle.x + leftPaddle.radius + ball.radius; // Reposition ball
-       showMessage('Collision with Left Paddle!'); // Show message for left paddle collision
-}      else if (ball.collidesWith(rightPaddle)) {
-       ball.xspeed = -ball.xspeed; // Reverse horizontal direction on collision with right paddle
-       ball.x = rightPaddle.x - ball.radius; // Reposition ball
-       showMessage('Collision with Right Paddle!'); // Show message for right paddle collision
-}
-       if (message) {
-        ctx.fillStyle = "red";
-        ctx.font = "20px Arial";
-        ctx.fillText(message, 100, 150); // Draw the message at specified position
-    }
+    // Collision detection with paddles
+             if (ball.collidesWith(leftPaddle)) {
+                ball.xspeed = -ball.xspeed; // Reverse horizontal direction on collision with left paddle
+                ball.x = leftPaddle.x + leftPaddle.radius + ball.radius; // Reposition ball
+                leftPaddle.score++; // Increment left paddle score (added)
+                showMessage('Collision with Left Paddle!'); // Show message for left paddle collision
+            }
 
+            if (ball.collidesWith(rightPaddle)) {
+                ball.xspeed = -ball.xspeed; // Reverse horizontal direction on collision with right paddle
+                ball.x = rightPaddle.x - ball.radius; // Reposition ball
+                rightPaddle.score++; // Increment right paddle score (added)
+                showMessage('Collision with Right Paddle!'); // Show message for right paddle collision
+            }
+
+            // Wall collision detection and score decrement
+            if (ball.x - ball.radius <= 0) {
+                rightPaddle.score--; // Decrement right paddle score if ball hits left wall (added)
+            } else if (ball.x + ball.radius >= canvas.width) {
+                leftPaddle.score--; // Decrement left paddle score if ball hits right wall (added)
+            }
+
+            drawScores(); // Draw the scores on the canvas (added)
+
+            if (message) {
+                ctx.fillStyle = "red";
+                ctx.font = "20px Arial";
+                ctx.fillText(message, 100, 150); // Draw the message at specified position
+            }
             window.requestAnimationFrame(repeatme); // Request next animation frame
         }
 
