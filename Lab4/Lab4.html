@@ -57,6 +57,16 @@
                     this.xspeed = -this.xspeed; // Reverse horizontal direction
                 }
             }
+
+            // Collision detection method added to the Ball class
+            collidesWith(paddle) {
+                const distX = this.x - paddle.x;
+                const distY = this.y - (paddle.y + paddle.radius);
+                const distance = Math.sqrt(distX * distX + distY * distY);
+                return distance < this.radius + paddle.radius; // Check if collision occurs
+
+                
+            }
         }
 
         class Paddle {
@@ -96,6 +106,18 @@
         var leftPaddle = new Paddle(30, 100, 10); // Left paddle as a circle
         var rightPaddle = new Paddle(360, 100, 10); // Right paddle as a circle
 
+        let message = ''; // Variable to store the collision message
+        let messageTimeout; // Variable for the message timeout
+
+        // Function to show a message for a short duration
+        function showMessage(msg) {
+            message = msg; // Set the message
+            if (messageTimeout) clearTimeout(messageTimeout); // Clear any existing timeout
+            messageTimeout = setTimeout(() => {
+                message = ''; // Clear the message after 0.75 seconds
+            }, 750);
+        }
+
         // A function to repeat every time the animation loops
         function repeatme() {
             // Clear the canvas
@@ -103,8 +125,23 @@
             ball.draw(ctx); // Draw the ball
             ball.update(canvas.width, canvas.height); // Update the ball's position
             leftPaddle.draw(ctx); // Draw the left paddle
-            rightPaddle.draw(ctx); // Draw the right paddle
-            window.requestAnimationFrame(repeatme);
+            rightPaddle.draw(ctx);  // Draw the right paddle
+
+            // New collision detection logic
+            if (ball.collidesWith(leftPaddle)) {
+                showMessage('Collision with Left Paddle!'); // Show message for left paddle collision
+            } else if (ball.collidesWith(rightPaddle)) {
+                showMessage('Collision with Right Paddle!'); // Show message for right paddle collision
+            }
+
+            // Logic to draw the message on the canvas
+            if (message) {
+                ctx.fillStyle = "red";
+                ctx.font = "20px Arial";
+                ctx.fillText(message, 100, 150); // Draw the message at specified position
+            }
+
+            window.requestAnimationFrame(repeatme); // Request next animation frame
         }
 
         // Add event listeners for paddle movement
