@@ -60,12 +60,14 @@
 
             // Collision detection method added to the Ball class
             collidesWith(paddle) {
-                const distX = this.x - paddle.x;
-                const distY = this.y - (paddle.y + paddle.radius);
-                const distance = Math.sqrt(distX * distX + distY * distY);
-                return distance < this.radius + paddle.radius; // Check if collision occurs
+                return (
+                    this.x - this.radius <= paddle.x + paddle.radius &&
+                    this.x + this.radius >= paddle.x - paddle.radius &&
+                    this.y + this.radius >= paddle.y &&
+                    this.y - this.radius <= paddle.y + paddle.radius * 2
+                );
             }
-        }
+        } // Closing bracket added for Ball class
 
         class Paddle {
             constructor(x, y, radius) {
@@ -116,6 +118,7 @@
                 message = ''; // Clear the message after 0.75 seconds
             }, 750);
         }
+
         function drawScores() {
             ctx.fillStyle = "black";
             ctx.font = "20px Arial";
@@ -132,28 +135,30 @@
             leftPaddle.draw(ctx); // Draw the left paddle
             rightPaddle.draw(ctx);  // Draw the right paddle
 
-            
-       
-    // Collision detection with paddles
-             if (ball.collidesWith(leftPaddle)) {
-                ball.xspeed = -ball.xspeed; // Reverse horizontal direction on collision with left paddle
-                ball.x = leftPaddle.x + leftPaddle.radius + ball.radius; // Reposition ball
-                leftPaddle.score++; // Increment left paddle score (added)
-                showMessage('Collision with Left Paddle!'); // Show message for left paddle collision
+            // Collision detection with paddles
+            // Left paddle collision
+            if (ball.collidesWith(leftPaddle)) {
+                ball.xspeed = Math.abs(ball.xspeed); // Ensure ball moves right after left paddle collision
+                ball.x = leftPaddle.x + leftPaddle.radius + ball.radius + 1; // Reposition ball outside the paddle
+                leftPaddle.score++; // Increment left paddle score
+                showMessage('Collision with Left Paddle!'); // Show collision message
             }
 
+            // Right paddle collision
             if (ball.collidesWith(rightPaddle)) {
-                ball.xspeed = -ball.xspeed; // Reverse horizontal direction on collision with right paddle
-                ball.x = rightPaddle.x - ball.radius; // Reposition ball
-                rightPaddle.score++; // Increment right paddle score (added)
-                showMessage('Collision with Right Paddle!'); // Show message for right paddle collision
+                ball.xspeed = -Math.abs(ball.xspeed); // Ensure ball moves left after right paddle collision
+                ball.x = rightPaddle.x - ball.radius - 1; // Reposition ball outside the paddle
+                rightPaddle.score++; // Increment right paddle score
+                showMessage('Collision with Right Paddle!'); // Show collision message
             }
 
-            // Wall collision detection and score decrement
+            // Wall collision handling and score decrement
             if (ball.x - ball.radius <= 0) {
-                rightPaddle.score--; // Decrement right paddle score if ball hits left wall (added)
+                rightPaddle.score--; // Decrement right paddle score if ball hits left wall
+                ball.xspeed = Math.abs(ball.xspeed); // Ensure ball moves right
             } else if (ball.x + ball.radius >= canvas.width) {
-                leftPaddle.score--; // Decrement left paddle score if ball hits right wall (added)
+                leftPaddle.score--; // Decrement left paddle score if ball hits right wall
+                ball.xspeed = -Math.abs(ball.xspeed); // Ensure ball moves left
             }
 
             drawScores(); // Draw the scores on the canvas (added)
