@@ -23,7 +23,7 @@
                 this.radius = radius; // Radius of the ball
                 this.xspeed = xspeed; // Horizontal speed
                 this.yspeed = yspeed; // Vertical speed
-                this.color = color;
+                this.color = color; //color
                 
             }
 
@@ -107,10 +107,9 @@
         var ctx = canvas.getContext("2d");
 
         // Create instances of Ball and Paddles
-        var ball = new Ball(200, 150, 20, 3, 4); // Adjusted ball starting position
+        var ball = new Ball(200, 150, 10, 3, 4); // Adjusted ball starting position
         var leftPaddle = new Paddle(30, 100, 10); // Left paddle as a circle
-        var rightPaddle = new Paddle(360, 100, 10); // Right paddle as a circle
-
+        var rightPaddle = new Paddle(canvas.width - 30, 100, 10); // Adjusted position for the right paddle
         let message = ''; // Variable to store the collision message
         let messageTimeout; // Variable for the message timeout
 
@@ -140,6 +139,7 @@
             rightPaddle.draw(ctx);  // Draw the right paddle
 
             // Collision detection with paddles
+            
             // Left paddle collision
             if (ball.collidesWith(leftPaddle)) {
                 ball.xspeed = Math.abs(ball.xspeed); // Ensure ball moves right after left paddle collision
@@ -190,7 +190,7 @@
                 rightPaddle.moveDown(); // Move right paddle down
             }
 
-            if (event.key === "j") {
+        if (event.key === "j") {
         ball.xspeed *= 1.1; // Increase horizontal speed
         ball.yspeed *= 1.1; // Increase vertical speed
     }   else if (event.key === "k") {
