@@ -189,13 +189,20 @@
             } else if (event.key === "s") {
                 rightPaddle.moveDown(); // Move right paddle down
             }
+
+            if (event.key === "j") {
+        ball.xspeed *= 1.1; // Increase horizontal speed
+        ball.yspeed *= 1.1; // Increase vertical speed
+    }   else if (event.key === "k") {
+        ball.xspeed *= 0.9; // Decrease horizontal speed 
+        ball.yspeed *= 0.9; // Decrease vertical speed 
+    }
         });
 
         // Add mouse movement listener to move paddles
         canvas.addEventListener("mousemove", function(event) {
             const rect = canvas.getBoundingClientRect();
             const mouseY = event.clientY - rect.top; // Get mouse Y relative to canvas
-            leftPaddle.followMouse(mouseY); // Move left paddle to mouse Y
             rightPaddle.followMouse(mouseY); // Move right paddle to mouse Y
         });
 
