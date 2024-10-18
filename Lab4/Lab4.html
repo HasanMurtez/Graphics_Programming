@@ -17,17 +17,21 @@
     <script type="text/javascript">
 
         class Ball {
-            constructor(x, y, radius, xspeed, yspeed) {
+            constructor(x, y, radius, xspeed, yspeed, color = "red") {
                 this.x = x; // Horizontal position
                 this.y = y; // Vertical position
                 this.radius = radius; // Radius of the ball
                 this.xspeed = xspeed; // Horizontal speed
                 this.yspeed = yspeed; // Vertical speed
+                this.color = color;
+                
             }
 
             draw(ctx) {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI); // Draw the ball
+                ctx.fillStyle = this.color;
+                ctx.fill();
                 ctx.strokeStyle = "black"; // Ball outline color
                 ctx.stroke(); // Draw the outline
             }
@@ -103,7 +107,7 @@
         var ctx = canvas.getContext("2d");
 
         // Create instances of Ball and Paddles
-        var ball = new Ball(200, 150, 10, 3, 4); // Adjusted ball starting position
+        var ball = new Ball(200, 150, 20, 3, 4); // Adjusted ball starting position
         var leftPaddle = new Paddle(30, 100, 10); // Left paddle as a circle
         var rightPaddle = new Paddle(360, 100, 10); // Right paddle as a circle
 
