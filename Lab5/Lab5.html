@@ -34,12 +34,23 @@
 
         // Add a spotlight to the scene
         var spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(30,30,30);  // Position the spotlight
+        spotLight.position.set(30, 30, 30);  // Position the spotlight
         scene.add(spotLight);  // Add spotlight to the scene
 
+        // Define direction for movement (1 for right, -1 for left)
+        var direction = -1;
         var repeatMe = function () {
             sphere.rotation.x += 0.01;
             sphere.rotation.y += 0.01;
+
+            // Move the sphere left to right
+
+            sphere.position.x += 0.1 * direction;
+            // Reverse direction when hitting bounds
+
+            if (sphere.position.x > 30 || sphere.position.x < -30) {
+                direction *= -1;  // Reverse the direction
+            }
             renderer.render(scene, camera);
             requestAnimationFrame(repeatMe);
         }
