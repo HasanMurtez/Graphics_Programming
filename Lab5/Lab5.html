@@ -59,7 +59,7 @@
                 this.sphere.rotation.y += 0.01;
 
                 // Move the sphere left to right
-                this.sphere.position.x += 0.1 * this.direction;
+                this.sphere.position.x += 0.4 * this.direction;
 
                 // Reverse direction when hitting wider bounds
                 if (this.sphere.position.x > 50 || this.sphere.position.x < -50) {
@@ -68,7 +68,7 @@
             }
         }
         // Instantiate the Sphere class
-        const sphere = new Sphere(15, 0xffff00);
+        const sphere = new Sphere(12, 0xffff00);
 
 
         // Add a spotlight to the scene
