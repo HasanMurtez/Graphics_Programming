@@ -7,6 +7,13 @@
     <meta charset="UTF-8">
     <title>Three.js Scene</title>
     <style type="text/css">
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
     </style>
 </head>
 
@@ -27,6 +34,7 @@
         // Implement renderer - Create a WebGL renderer for rendering the scene.
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true; // Enable shadow map in the renderer
         document.body.appendChild(renderer.domElement);
 
         class Sphere {
@@ -36,11 +44,13 @@
                 this.material = new THREE.MeshLambertMaterial({ color: color, wireframe: true });
 
                 // Create the sphere and add it to the scene
-                this.sphere = new THREE.Mesh(this.geometry, this.material); // Keeping original variable name
+                this.sphere = new THREE.Mesh(this.geometry, this.material);
+                this.sphere.castShadow = true;  // Enable shadow casting for the sphere
                 scene.add(this.sphere);
 
                 // Initial position and direction
-                this.sphere.position.x = 0; // Using the same variable name
+                this.sphere.position.x = 0;
+                this.sphere.position.y = 20;  // Raise the sphere so that it's above the plane
                 this.direction = -1; // Direction for movement
             }
             animate() {
@@ -52,19 +62,35 @@
                 this.sphere.position.x += 0.1 * this.direction;
 
                 // Reverse direction when hitting wider bounds
-                if (this.sphere.position.x > 50 || this.sphere.position.x < -50) { // Adjusted bounds for wider movement
+                if (this.sphere.position.x > 50 || this.sphere.position.x < -50) {
                     this.direction *= -1; // Reverse the direction
                 }
             }
         }
         // Instantiate the Sphere class
-        const sphere = new Sphere(15, 0xffff00); // Using the same variable name
+        const sphere = new Sphere(15, 0xffff00);
 
 
         // Add a spotlight to the scene
         var spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(30, 30, 30);  // Position the spotlight
+        spotLight.position.set(30, 50, 50);  // Position the spotlight
+        spotLight.castShadow = true; // Enable shadow casting for the light
+        spotLight.shadow.mapSize.width = 1024; // Shadow quality width
+        spotLight.shadow.mapSize.height = 1024; // Shadow quality height
         scene.add(spotLight);  // Add spotlight to the scene
+
+        // Add a plane to receive the shadow
+        var planeGeometry = new THREE.PlaneGeometry(200, 200);
+        var planeMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.rotation.x = - Math.PI / 2;  // Rotate the plane to be horizontal
+        plane.position.y = -5;  // Position the plane just below the sphere
+        plane.receiveShadow = true;  // Enable shadow receiving on the plane
+        scene.add(plane);
+
+        // Add a Camera Helper for the spotlight's camera
+        var cameraHelper = new THREE.CameraHelper(spotLight.shadow.camera);
+        scene.add(cameraHelper);
 
         var repeatMe = function () {
             sphere.animate(); // Call the animate method of the sphere
