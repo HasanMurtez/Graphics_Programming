@@ -23,38 +23,55 @@
 
         // Set camera position
         camera.position.z = 50;
+
         // Implement renderer - Create a WebGL renderer for rendering the scene.
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        const geometry = new THREE.SphereGeometry(15, 32, 16);
-        const material = new THREE.MeshLambertMaterial({ color: 0xffff00, wireframe: true });
-        const sphere = new THREE.Mesh(geometry, material); scene.add(sphere);
+        class Sphere {
+            constructor(radius, color) {
+                // Create geometry and material
+                this.geometry = new THREE.SphereGeometry(radius, 32, 16);
+                this.material = new THREE.MeshLambertMaterial({ color: color, wireframe: true });
+
+                // Create the sphere and add it to the scene
+                this.sphere = new THREE.Mesh(this.geometry, this.material); // Keeping original variable name
+                scene.add(this.sphere);
+
+                // Initial position and direction
+                this.sphere.position.x = 0; // Using the same variable name
+                this.direction = -1; // Direction for movement
+            }
+            animate() {
+                // Rotate the sphere
+                this.sphere.rotation.x += 0.01;
+                this.sphere.rotation.y += 0.01;
+
+                // Move the sphere left to right
+                this.sphere.position.x += 0.1 * this.direction;
+
+                // Reverse direction when hitting wider bounds
+                if (this.sphere.position.x > 50 || this.sphere.position.x < -50) { // Adjusted bounds for wider movement
+                    this.direction *= -1; // Reverse the direction
+                }
+            }
+        }
+        // Instantiate the Sphere class
+        const sphere = new Sphere(15, 0xffff00); // Using the same variable name
+
 
         // Add a spotlight to the scene
         var spotLight = new THREE.SpotLight(0xffffff);
         spotLight.position.set(30, 30, 30);  // Position the spotlight
         scene.add(spotLight);  // Add spotlight to the scene
 
-        // Define direction for movement (1 for right, -1 for left)
-        var direction = -1;
         var repeatMe = function () {
-            sphere.rotation.x += 0.01;
-            sphere.rotation.y += 0.01;
-
-            // Move the sphere left to right
-
-            sphere.position.x += 0.1 * direction;
-            // Reverse direction when hitting bounds
-
-            if (sphere.position.x > 30 || sphere.position.x < -30) {
-                direction *= -1;  // Reverse the direction
-            }
-            renderer.render(scene, camera);
-            requestAnimationFrame(repeatMe);
+            sphere.animate(); // Call the animate method of the sphere
+            renderer.render(scene, camera); // Render the scene
+            requestAnimationFrame(repeatMe); // Continue the loop
         }
-        repeatMe();
+        repeatMe(); // Start the animation loop
 
     </script>
 </body>
