@@ -25,27 +25,126 @@
         // Create a Three.js scene to hold objects
         var scene = new THREE.Scene();
 
-        // Create a camera with specified properties.
-        var camera = new THREE.PerspectiveCamera(76, window.innerWidth / window.innerHeight, 0.1, 1000);
-        
+        // Create a camera with specified properties
+        var camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+
         // Set camera position
-        
-        // Implement renderer - Create a WebGL renderer for rendering the scene.
+        camera.position.z = 50;
+
+        // Create a WebGL renderer for rendering the scene
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true; // Enable shadow map in the renderer
         document.body.appendChild(renderer.domElement);
-       
-        function animate() {
-            requestAnimationFrame(animate);
+
+        // Class definition for Sphere
+        class Sphere {
+            constructor(radius, color, initialX, initialY, initialDirectionX) {
+                // Create geometry and material
+                this.geometry = new THREE.SphereGeometry(radius, 32, 16);
+                this.material = new THREE.MeshLambertMaterial({ color: color, wireframe: true });
+
+                // Create the sphere and add it to the scene
+                this.sphere = new THREE.Mesh(this.geometry, this.material);
+                this.sphere.castShadow = true;  // Enable shadow casting for the sphere
+                scene.add(this.sphere);
+
+                // Initial position and speed (vertical velocity)
+                this.sphere.position.x = initialX;
+                this.sphere.position.y = initialY;
+                this.directionX = initialDirectionX; // Horizontal direction for movement
+                this.velocity = 0;   // Initial vertical velocity
+                this.gravity = -0.2;  // Slower gravity to slow down the drop
+                this.bounceFactor = 0.7;  // Energy loss on bounce
+                this.radius = radius; // Store radius for collision detection
+            }
+
+            // Animate the sphere
+            animate() {
+                // Rotate the sphere
+                this.sphere.rotation.x += 0.01;
+                this.sphere.rotation.y += 0.01;
+
+                // Move the sphere left to right
+                this.sphere.position.x += 0.4 * this.directionX;
+
+                // Reverse direction when hitting the bounds
+                if (this.sphere.position.x > 50 || this.sphere.position.x < -50) {
+                    this.directionX *= -1;  // Reverse direction
+                }
+
+                // Gravity effect (adding downward velocity)
+                this.velocity += this.gravity;
+                this.sphere.position.y += this.velocity;
+
+                // Check if the sphere hits the plane and simulate bounce
+                if (this.sphere.position.y - this.radius <= -5) {  // Adjust based on radius and plane height
+                    this.sphere.position.y = -5 + this.radius;  // Correct position to prevent sinking into the plane
+                    this.velocity *= -this.bounceFactor;  // Reverse velocity (bounce) with some energy loss
+                }
+            }
+
+            // Check collision with another sphere
+            checkCollision(otherSphere) {
+                const distance = this.sphere.position.distanceTo(otherSphere.sphere.position);
+                const combinedRadius = this.radius + otherSphere.radius;
+
+                if (distance <= combinedRadius) {
+                    // Simple collision response: reverse direction on collision
+                    this.directionX *= -1;
+                    otherSphere.directionX *= -1;
+
+                    // Basic bounce effect - Swap velocities (could be more complex)
+                    const tempVelocity = this.velocity;
+                    this.velocity = otherSphere.velocity;
+                    otherSphere.velocity = tempVelocity;
+                }
+            }
+        }
+
+        // Instantiate two spheres with different starting positions
+        const sphere1 = new Sphere(12, 0xffff00, 0, 20, -1);   // Yellow sphere
+        const sphere2 = new Sphere(8, 0xff0000, -30, 30, 1);   // Red sphere (smaller)
+
+        // Add a spotlight to the scene
+        var spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(30, 50, 50);  // Position the spotlight
+        spotLight.castShadow = true; // Enable shadow casting for the light
+        spotLight.shadow.mapSize.width = 1024; // Shadow quality width
+        spotLight.shadow.mapSize.height = 1024; // Shadow quality height
+        scene.add(spotLight);  // Add spotlight to the scene
+
+        // Add a plane to receive the shadow
+        var planeGeometry = new THREE.PlaneGeometry(200, 200);
+        var planeMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.rotation.x = - Math.PI / 2;  // Rotate the plane to be horizontal
+        plane.position.y = -5;  // Position the plane just below the sphere
+        plane.receiveShadow = true;  // Enable shadow receiving on the plane
+        scene.add(plane);
+
+        // Add a Camera Helper for the spotlight's camera
+        var cameraHelper = new THREE.CameraHelper(spotLight.shadow.camera);
+        scene.add(cameraHelper);
+
+        // Animation loop
+        var repeatMe = function () {
+            // Animate both spheres
+            sphere1.animate();
+            sphere2.animate();
+
+            // Check for collision between the two spheres
+            sphere1.checkCollision(sphere2);
+
+            // Render the scene
             renderer.render(scene, camera);
+
+            // Continue the loop
+            requestAnimationFrame(repeatMe);
         }
         repeatMe(); // Start the animation loop
 
-        // Start the animation
-        animate();
     </script>
 </body>
 
 </html>
-
