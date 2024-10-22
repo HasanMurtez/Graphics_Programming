@@ -9,6 +9,7 @@
     <style type="text/css">
         body {
             margin: 0;
+        
         }
 
         canvas {
@@ -103,8 +104,8 @@
         }
 
         // Instantiate two spheres with different starting positions
-        const sphere1 = new Sphere(12, 0xffff00, 0, 20, -1);   // Yellow sphere
-        const sphere2 = new Sphere(8, 0xff0000, -30, 30, 1);   // Red sphere (smaller)
+        const sphere1 = new Sphere(12, 0x00ff00, 0, 20, -1);   // Yellow sphere
+        const sphere2 = new Sphere(8, 0x0000ff, -30, 30, 1);   // Red sphere (smaller)
 
         // Add a spotlight to the scene
         var spotLight = new THREE.SpotLight(0xffffff);
