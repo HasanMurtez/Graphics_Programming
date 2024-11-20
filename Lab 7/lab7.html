@@ -3,15 +3,37 @@
 
 <head>
     <meta charset="UTF-8">
+    <title>D3.js Demo</title>
     <style type="text/css">
         h1 {
             text-align: center;
             font-family: Arial, sans-serif;
             color: #333;
         }
+
+        .chart {
+            margin: auto;
+            max-width: 800px;
+        }
+
+        .axis text {
+            font-size: 12px;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            shape-rendering: crispEdges;
+        }
+
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
     </style>
 
-    <!--D3.js and jQuery Libaries-->
+    <!-- D3.js and jQuery Libraries -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
@@ -20,17 +42,24 @@
     <h1>Hasan</h1>
 
     <script type="text/javascript">
-          $.ajax({
+        // Fetch JSON Atmospheric CO2 data using AJAX
+        $.ajax({
             url: "https://tinyurl.com/k4chnujx",
             method: "GET",
             dataType: "json",
             success: function (data) {
                 console.log("JSON Data Loaded Successfully:", data);
+                plotCO2Data(data);
             },
             error: function (xhr, status, error) {
                 console.error("Failed to load JSON data:", error);
             }
         });
+
+        // Define the plotCO2Data() function
+        function plotCO2Data(data) {
+            console.log("Plotting data:", data);
+        }
     </script>
 </body>
 
