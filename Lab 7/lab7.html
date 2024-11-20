@@ -71,8 +71,24 @@
                 .append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            // Log to confirm SVG setup
-            console.log("SVG Size and margins are set up.");
+            const parsedData = data.map(d => ({
+                year: +d.year, // Convert year to integer
+                co2: +d.co2   // Convert CO2 value to integer
+            }));
+
+            // Create scales
+            const x = d3.scaleLinear()
+                .domain(d3.extent(parsedData, d => d.year)) // Extent of years (min and max)
+                .range([0, width]); // Map to SVG width
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(parsedData, d => d.co2)]) // From 0 to max CO2 value
+                .range([height, 0]); // Map to SVG height (inverted for y-axis)
+
+            // Log scales to verify
+            console.log("X Scale:", x.domain(), x.range());
+            console.log("Y Scale:", y.domain(), y.range());
+
         }
     </script>
 </body>
