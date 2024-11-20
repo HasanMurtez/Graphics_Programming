@@ -20,6 +20,17 @@
     <h1>Hasan</h1>
 
     <script type="text/javascript">
+          $.ajax({
+            url: "https://tinyurl.com/k4chnujx",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log("JSON Data Loaded Successfully:", data);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to load JSON data:", error);
+            }
+        });
     </script>
 </body>
 
