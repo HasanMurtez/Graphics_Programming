@@ -9,7 +9,7 @@
     <style type="text/css">
         body {
             margin: 0;
-        
+
         }
 
         canvas {
@@ -74,7 +74,7 @@
                     this.directionX *= -1;  // Reverse direction
                 }
 
-                // Gravity effect (adding downward velocity)
+                // Gravity effect
                 this.velocity += this.gravity;
                 this.sphere.position.y += this.velocity;
 
@@ -103,9 +103,9 @@
             }
         }
 
-        // Instantiate two spheres with different starting positions
-        const sphere1 = new Sphere(12, 0x00ff00, 0, 20, -1);   // Yellow sphere
-        const sphere2 = new Sphere(8, 0x0000ff, -30, 30, 1);   // Red sphere (smaller)
+        //two spheres with different starting positions
+        const sphere1 = new Sphere(9, 0x00ff00, 0, 20, -1);   // Yellow sphere
+        const sphere2 = new Sphere(9, 0x0000ff, -30, 30, 1);   // Red sphere (smaller)
 
         // Add a spotlight to the scene
         var spotLight = new THREE.SpotLight(0xffffff);
@@ -117,7 +117,7 @@
 
         // Add a plane to receive the shadow
         var planeGeometry = new THREE.PlaneGeometry(200, 200);
-        var planeMaterial = new THREE.MeshLambertMaterial({ color: 0x808080 });
+        var planeMaterial = new THREE.MeshLambertMaterial({ color: 0x90ee90 });
         var plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.rotation.x = - Math.PI / 2;  // Rotate the plane to be horizontal
         plane.position.y = -5;  // Position the plane just below the sphere
