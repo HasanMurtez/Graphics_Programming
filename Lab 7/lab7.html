@@ -28,7 +28,7 @@
 
         .line {
             fill: none;
-            stroke: steelblue;
+            stroke: red; /* Updated line to red */
             stroke-width: 2px;
         }
     </style>
@@ -58,7 +58,6 @@
 
         // Define the plotCO2Data() function
         function plotCO2Data(data) {
-
             // SVG size and margins
             const margin = { top: 20, right: 30, bottom: 50, left: 50 };
             const width = 800 - margin.left - margin.right;
@@ -90,7 +89,7 @@
                 .domain([0, d3.max(filteredData, d => d.co2)])
                 .range([height, 0]);
 
-            //scales to verify
+            // Log scales to verify
             console.log("X Scale Domain:", x.domain(), "Range:", x.range());
             console.log("Y Scale Domain:", y.domain(), "Range:", y.range());
 
@@ -110,7 +109,7 @@
             svg.append("path")
                 .datum(filteredData)
                 .attr("fill", "none")
-                .attr("stroke", "steelblue")
+                .attr("stroke", "red") // Changed to red
                 .attr("stroke-width", 2)
                 .attr("class", "line")
                 .attr("d", line);
