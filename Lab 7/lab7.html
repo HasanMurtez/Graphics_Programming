@@ -17,7 +17,7 @@
         }
 
         .axis text {
-            font-size: 12px;
+            font-size: 14px; /* Increased default font size for axis labels */
         }
 
         .axis path,
@@ -28,8 +28,20 @@
 
         .line {
             fill: none;
-            stroke: red; /* Updated line to red */
+            stroke: red; /* Red line */
             stroke-width: 2px;
+        }
+
+        .label {
+            font-size: 16px; /* Font size for axis labels */
+            text-anchor: middle; /* Center the labels */
+            fill: #333;
+        }
+
+        .chart-title {
+            font-size: 20px; /* Font size for chart title */
+            text-anchor: middle;
+            fill: #333;
         }
     </style>
 
@@ -59,7 +71,7 @@
         // Define the plotCO2Data() function
         function plotCO2Data(data) {
             // SVG size and margins
-            const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+            const margin = { top: 50, right: 30, bottom: 70, left: 70 };
             const width = 800 - margin.left - margin.right;
             const height = 400 - margin.top - margin.bottom;
 
@@ -89,10 +101,6 @@
                 .domain([0, d3.max(filteredData, d => d.co2)])
                 .range([height, 0]);
 
-            // Log scales to verify
-            console.log("X Scale Domain:", x.domain(), "Range:", x.range());
-            console.log("Y Scale Domain:", y.domain(), "Range:", y.range());
-
             // Add axes
             svg.append("g")
                 .attr("transform", `translate(0, ${height})`)
@@ -100,6 +108,27 @@
 
             svg.append("g")
                 .call(d3.axisLeft(y));
+
+            // Add axis labels
+            svg.append("text")
+                .attr("class", "label")
+                .attr("x", width / 2)
+                .attr("y", height + 40) // Position below the x-axis
+                .text("Year");
+
+            svg.append("text")
+                .attr("class", "label")
+                .attr("x", -height / 2) // Rotate to align with y-axis
+                .attr("y", -50)
+                .attr("transform", "rotate(-90)")
+                .text("CO2 Levels (ppm)");
+
+            // Add chart title
+            svg.append("text")
+                .attr("class", "chart-title")
+                .attr("x", width / 2)
+                .attr("y", -20) // Position above the chart
+                .text("Atmospheric CO2 Levels Over Time");
 
             // Add the line path
             const line = d3.line()
@@ -109,7 +138,7 @@
             svg.append("path")
                 .datum(filteredData)
                 .attr("fill", "none")
-                .attr("stroke", "red") // Changed to red
+                .attr("stroke", "red")
                 .attr("stroke-width", 2)
                 .attr("class", "line")
                 .attr("d", line);
